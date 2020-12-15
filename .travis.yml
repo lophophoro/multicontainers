@@ -34,7 +34,7 @@ deploy:
   app: "multicontainers"
   env: "Multicontainers-env"
   bucket_name: "elasticbeanstalk-us-east-2-121607027350"
-  bucket_path: "docker-test"
+  bucket_path: "docker-multicontainers"
   on:
     branch: master
   access_key_id: $AWS_ACCESS_KEY
