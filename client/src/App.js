@@ -25,7 +25,7 @@ function App() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Testing deployment
+            just nonsense for test
           </a>
           <Link to="/">Home</Link>
           <Link to="/otherpage">Other Page</Link>

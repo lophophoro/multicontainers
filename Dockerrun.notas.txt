@@ -3,7 +3,7 @@ configuracion para amazonECS (administrador de containers de amazon para elastic
 este archivo crea un grupo de contenedores a partir de lo que se subio a docker hub, es similar a lo que hace docker compose
 
 {
-    "AWSEBDockerrunversion": 2,
+    "AWSEBDockerrunVersion": 2, <- OJO las mayusculas!
     "containerDefinitions": [
         {
             "name":"client", <- nombre que tendra el container en el dashboard, es buena practica ser consistente con el nombre
