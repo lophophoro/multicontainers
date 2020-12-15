@@ -1,4 +1,6 @@
 version: "3"
+#Los nombres de los servicios funcionan como dominios, es decir; "http://client", "http://api", etc
+#services es algo asi como un tipo de contenedor
 services:
   postgres:
     image: "postgres:latest"
@@ -14,6 +16,7 @@ services:
       - "3050:80"
   redis:
     image: "redis:latest"
+  #api es el servidor express, funciona en el puerto 5000
   api:
     build:
       dockerfile: Dockerfile.dev
@@ -29,6 +32,7 @@ services:
       - PGDATABASE=postgres
       - PGPASSWORD=postgres_password
       - PGPORT=5432
+  #client es el servidor de desarrollo react, funciona en el puerto 3000. desde esta imagen se construye la version de produccion (en travis)
   client:
     #evitar el bug al iniciar el cliente react
     stdin_open: true

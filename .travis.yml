@@ -17,8 +17,8 @@ after_success:
   - docker build -t lophophoro/multi-server ./server
   - docker build -t lophophoro/multi-worker ./worker
 
-  #loggear en el docker CLI, para subir las imagenes a dockerhub en vez de subirlas a ELASTICBEAN directamente
-  #echo "$DOCKER_PASSWORD" recibe la variable de entorno, y la pasa como parametro a docker login -u "$DOCKER_ID" a traves de --password-stdin
+  #loggear en el docker CLI, para subir las imagenes a dockerhub en vez de subirlas a ELASTIC BEANSTALK directamente
+  #echo "$DOCKER_PASSWORD" recibe la variable de entorno (establecidas en travis), y la pasa como parametro a docker login -u "$DOCKER_ID" a traves de --password-stdin
   # el flag -u es para "user"
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
@@ -27,3 +27,15 @@ after_success:
   - docker push lophophoro/multi-nginx
   - docker push lophophoro/multi-server
   - docker push lophophoro/multi-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "multicontainers"
+  env: "Multicontainers-env"
+  bucket_name: "elasticbeanstalk-us-east-2-121607027350"
+  bucket_path: "docker-test"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY

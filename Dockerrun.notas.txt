@@ -1,0 +1,40 @@
+configuracion para amazonECS (administrador de containers de amazon para elastic beanstalk)
+
+este archivo crea un grupo de contenedores a partir de lo que se subio a docker hub, es similar a lo que hace docker compose
+
+{
+    "AWSEBDockerrunversion": 2,
+    "containerDefinitions": [
+        {
+            "name":"client", <- nombre que tendra el container en el dashboard, es buena practica ser consistente con el nombre
+            "image":"lophophoro/multi-worker", <- nombre de la imagen en docker hub
+            "hostname": "client", <- nombre que le daremos al container para que los demas containers puedan acceder a el
+            "essential": false, <- si es true, si este container falla, elastic beanstalk detendra la ejecucion de los demas containers. AL MENOS 1 SERVICIO DEBE ESTAR MARCADO COMO TRUE
+        },
+        {
+            "name":"server",
+            "image":"lophophoro/multi-server",
+            "hostname": "api", <-ese es el nombre que le dimos en nginx.conf
+            "essential": false
+        },
+        {
+            "name": "worker",
+            "image": "lophophoro/multi-worker",
+            "hostname": "worker", <- aqui el hostname es opcional, pues ningun otro container necesita acceso directo a este container
+            "essential": false
+            },
+        {
+            "name": "nginx",
+            "image": "lophophoro/multi-nginx",
+            "hostname": "nginx", <- aqui el hostname es opcional, pues ningun otro container necesita acceso directo a este container
+            "essential": true,
+            "portMappings": [
+                {
+                "hostPort": 80, <-abre el puerto 80 en la maquina que ejecutará las imagenes
+                "containerPort": 80 <-abre el puerto 80 dentro del "supercontainer"
+                }
+            ],
+            "links":["client","server"] <- a diferencia de docker compose, en ECS hay que hacer explicitos los links entre containers. en este caso nginx conecta con "client", y "server"
+        }
+    ]
+}

@@ -11,3 +11,4 @@ FROM nginx
 EXPOSE 3000
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY --from=0 /app/build /usr/share/nginx/html
+#una vez iniciado el contenedor, nginx se inicia automaticamente, no hace falta el comando run

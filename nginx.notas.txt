@@ -1,0 +1,33 @@
+#The server inside each of the upstreams represents where to find each of the applications
+upstream client {
+    server client:3000; // server <nombre container en docker-compose/dockerrun>:<puerto container>
+}
+
+//en desarrollo, en el archivo docker-compose, llamamos "api" al servicio, por lo tanto, nginx buscará ese nombre como hostname.
+//docker-compose y dockerrun no estan directamente relacionados, ambos sirven para crear grupos de contenerdores, sin embargo comparten este archivo para el manejo de rutas
+//por lo tanto, al pasar a produccion no modificaremos este archivo, deberemos adaptar el archivo dockerrun segun lo que tengamos aca 
+upstream api {
+    server api:5000;
+}
+
+#
+server {
+    listen 80;
+
+    location / {
+        proxy_pass http://client; // http://<nombre del upstream>
+    }
+
+    //evita el error sockjs-node en chrome
+    location /sockjs-node {
+        proxy_pass http://client;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+    }
+
+    location /api {
+        rewrite /api/(.*) /$1 break; <- usa regex para eliminar el "/api" de la url del request
+        proxy_pass http://api;
+    }
+}
